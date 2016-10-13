@@ -1,0 +1,24 @@
+--- /datas2/moodles/moodle3.0.5+/moodle/mod/assign/submission/comments/locallib.php	2016-07-14 11:28:46.000000000 +0200
++++ /datas2/gitworkspace/moodle27/moodle2_version/mod/assign/submission/comments/locallib.php	2016-07-20 10:59:04.676662593 +0200
+@@ -149,10 +149,17 @@
+             $options->component = 'assignsubmission_comments';
+             $options->showcount = true;
+             $options->displaycancel = true;
+-
+-            $comment = new comment($options);
+-            $comment->add($oldsubmission->data1);
+-            $comment->set_view_permission(true);
++			//UNISTRA DEV
++            if($this->assignment->can_view_submission($oldsubmission->userid)){
++            	$comment = new comment($options);
++            	$comment->add($oldsubmission->data1);
++            	$comment->set_view_permission(true);
++            }else{
++            	$log.='no comments migration for assignment submission : '.$oldsubmission->id.' ;for userid : '.$oldsubmission->userid.' ;for assignment : '.$oldassignment->id.' ;for assignment name : '.$oldassignment->name.' ;for course id : '.$oldassignment->course.PHP_EOL;
++            	return true;
++            }
++            //END UNISTRA DEV
++            
+ 
+             return $comment->output(true);
+         }
